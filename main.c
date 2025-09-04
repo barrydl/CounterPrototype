@@ -296,10 +296,10 @@ int main(void) {
 
     while (1)
     {
-        if (RA0)
+        if (!RA0)
         {
           RA0Value = 1;
-          while (RA0)
+          while (!RA0)
           {              
               __delay_ms(30);
           }

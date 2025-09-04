@@ -1,7 +1,7 @@
 
 
 Microchip MPLAB XC8 Assembler V2.40 build 20220703182018 
-                                                                                               Thu Sep 04 10:26:44 2025
+                                                                                               Thu Sep 04 10:30:23 2025
 
 Microchip MPLAB XC8 C Compiler v2.40 (Free license) build 20220703182018 Og1 
      1                           	processor	16LF1509
@@ -1720,9 +1720,9 @@ Microchip MPLAB XC8 C Compiler v2.40 (Free license) build 20220703182018 Og1
   1706     0733  3184  24A0  3187   	fcall	_Display
   1707     0736                     l2471:
   1708                           
-  1709                           ;main.c: 298:     {;main.c: 299:         if (RA0)
+  1709                           ;main.c: 298:     {;main.c: 299:         if (!RA0)
   1710     0736  0020               	movlb	0	; select bank0
-  1711     0737  1C0C               	btfss	12,0	;volatile
+  1711     0737  180C               	btfsc	12,0	;volatile
   1712     0738  2F3A               	goto	u1491
   1713     0739  2F3B               	goto	u1490
   1714     073A                     u1491:
@@ -1734,7 +1734,7 @@ Microchip MPLAB XC8 C Compiler v2.40 (Free license) build 20220703182018 Og1
   1720     073B  01DE               	clrf	_RA0Value
   1721     073C  0ADE               	incf	_RA0Value,f
   1722                           
-  1723                           ;main.c: 302:           while (RA0)
+  1723                           ;main.c: 302:           while (!RA0)
   1724     073D  2F46               	goto	l2477
   1725     073E                     l2475:
   1726                           
@@ -1751,9 +1751,9 @@ Microchip MPLAB XC8 C Compiler v2.40 (Free license) build 20220703182018 Og1
   1736     0745  2F42               	goto	u1517
   1737     0746                     l2477:
   1738                           
-  1739                           ;main.c: 302:           while (RA0)
+  1739                           ;main.c: 302:           while (!RA0)
   1740     0746  0020               	movlb	0	; select bank0
-  1741     0747  180C               	btfsc	12,0	;volatile
+  1741     0747  1C0C               	btfss	12,0	;volatile
   1742     0748  2F4A               	goto	u1501
   1743     0749  2F4B               	goto	u1500
   1744     074A                     u1501:
@@ -6012,7 +6012,7 @@ SFR31                0      0       0      32        0.0%
 
 
 Microchip Technology PIC Macro Assembler V2.40 build 20220703182018 
-Symbol Table                                                                                   Thu Sep 04 10:26:44 2025
+Symbol Table                                                                                   Thu Sep 04 10:30:23 2025
 
                                            l7 0FF9                                            l62 07DA  
                                           l48 078D                                            l83 07F2  

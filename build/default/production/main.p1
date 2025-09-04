@@ -1175,8 +1175,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;main.c: 298:     {
 {
 "299
-[; ;main.c: 299:         if (RA0)
-[e $ ! _RA0 471  ]
+[; ;main.c: 299:         if (!RA0)
+[e $ ! ! _RA0 471  ]
 "300
 [; ;main.c: 300:         {
 {
@@ -1184,7 +1184,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;main.c: 301:           RA0Value = 1;
 [e = _RA0Value -> -> 1 `i `uc ]
 "302
-[; ;main.c: 302:           while (RA0)
+[; ;main.c: 302:           while (!RA0)
 [e $U 472  ]
 [e :U 473 ]
 "303
@@ -1198,8 +1198,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 }
 [e :U 472 ]
 "302
-[; ;main.c: 302:           while (RA0)
-[e $ _RA0 473  ]
+[; ;main.c: 302:           while (!RA0)
+[e $ ! _RA0 473  ]
 [e :U 474 ]
 "306
 [; ;main.c: 306:         }
