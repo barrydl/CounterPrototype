@@ -1,3 +1,4 @@
+#define AUTO_COUNT 0
 /*
  * MAIN Generated Driver File
  * 
@@ -54,11 +55,14 @@
 #define D2F PORTAbits.RA2
 #define D2G PORTAbits.RA1
 
+void Display(int a);
 /*
     Main application
  */
 
 char toggle = 0;
+char counter = 0;
+char RA0Value = 1;
 
 struct digit {
     char a;
@@ -114,6 +118,12 @@ void Tmr1CallBack(void) {
     D2E = toggle ^ one.e;
     D2F = toggle ^ one.f;
     D2G = toggle ^ one.g;
+    
+    if (RA0Value)
+    {
+        RA0Value = 0;
+        Display(++counter);
+    }
 }
 
 void SetSegments(Digit* digit, int a, char blank) {
@@ -257,7 +267,7 @@ int main(void) {
     // Use the following macros to: 
 
     TMR1_OverflowCallbackRegister(Tmr1CallBack);
-
+    
     // Enable the Global Interrupts 
     INTERRUPT_GlobalInterruptEnable();
 
@@ -270,6 +280,7 @@ int main(void) {
     // Disable the Peripheral Interrupts 
     //INTERRUPT_PeripheralInterruptDisable(); 
 
+#if AUTO_COUNT
     int i = 0;
 
     while (1) {
@@ -280,4 +291,19 @@ int main(void) {
         }
         __delay_ms(100);
     }
+#else
+    Display(counter);
+
+    while (1)
+    {
+        if (RA0)
+        {
+          RA0Value = 1;
+          while (RA0)
+          {              
+              __delay_ms(30);
+          }
+        }
+    }
+#endif    
 }

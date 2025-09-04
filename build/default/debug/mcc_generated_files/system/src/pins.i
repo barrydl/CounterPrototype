@@ -6013,7 +6013,7 @@ extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 # 29 "C:/Program Files/Microchip/MPLABX/v6.05/packs/Microchip/PIC12-16F1xxx_DFP/1.3.90/xc8\\pic\\include\\xc.h" 2 3
 # 38 "mcc_generated_files/system/src/../pins.h" 2
-# 381 "mcc_generated_files/system/src/../pins.h"
+# 382 "mcc_generated_files/system/src/../pins.h"
 void PIN_MANAGER_Initialize (void);
 
 
@@ -6023,9 +6023,24 @@ void PIN_MANAGER_Initialize (void);
 
 
 void PIN_MANAGER_IOC(void);
+
+
+
+
+
+
+
+void IO_RA0_ISR(void);
+# 408 "mcc_generated_files/system/src/../pins.h"
+void IO_RA0_SetInterruptHandler(void (* InterruptHandler)(void));
+# 419 "mcc_generated_files/system/src/../pins.h"
+extern void (*IO_RA0_InterruptHandler)(void);
+# 430 "mcc_generated_files/system/src/../pins.h"
+void IO_RA0_DefaultInterruptHandler(void);
 # 35 "mcc_generated_files/system/src/pins.c" 2
 
 
+void (*IO_RA0_InterruptHandler)(void);
 
 void PIN_MANAGER_Initialize(void)
 {
@@ -6053,17 +6068,18 @@ void PIN_MANAGER_Initialize(void)
 
 
 
-    WPUA = 0x3F;
-    WPUB = 0xF0;
+    WPUA = 0x9;
+    WPUB = 0x0;
     OPTION_REGbits.nWPUEN = 0x0;
-# 90 "mcc_generated_files/system/src/pins.c"
+# 91 "mcc_generated_files/system/src/pins.c"
     IOCAP = 0x0;
-    IOCAN = 0x0;
+    IOCAN = 0x1;
     IOCAF = 0x0;
     IOCBP = 0x0;
     IOCBN = 0x0;
     IOCBF = 0x0;
 
+    IO_RA0_SetInterruptHandler(IO_RA0_DefaultInterruptHandler);
 
 
     INTCONbits.IOCIE = 1;
@@ -6071,4 +6087,39 @@ void PIN_MANAGER_Initialize(void)
 
 void PIN_MANAGER_IOC(void)
 {
+
+    if(IOCAFbits.IOCAF0 == 1)
+    {
+        IO_RA0_ISR();
+    }
+}
+
+
+
+
+void IO_RA0_ISR(void) {
+
+
+
+
+    if(IO_RA0_InterruptHandler)
+    {
+        IO_RA0_InterruptHandler();
+    }
+    IOCAFbits.IOCAF0 = 0;
+}
+
+
+
+
+void IO_RA0_SetInterruptHandler(void (* InterruptHandler)(void)){
+    IO_RA0_InterruptHandler = InterruptHandler;
+}
+
+
+
+
+void IO_RA0_DefaultInterruptHandler(void){
+
+
 }

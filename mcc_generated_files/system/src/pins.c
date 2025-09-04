@@ -61,8 +61,8 @@ void PIN_MANAGER_Initialize(void)
     /**
     WPUx registers
     */
-    WPUA = 0x3F;
-    WPUB = 0xF0;
+    WPUA = 0x9;
+    WPUB = 0x0;
     OPTION_REGbits.nWPUEN = 0x0;
   
     /**

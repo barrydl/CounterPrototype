@@ -7,7 +7,7 @@
 # 1 "C:/Program Files/Microchip/MPLABX/v6.05/packs/Microchip/PIC12-16F1xxx_DFP/1.3.90/xc8\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
 # 1 "main.c" 2
-# 35 "main.c"
+# 36 "main.c"
 # 1 "./mcc_generated_files/system/system.h" 1
 # 39 "./mcc_generated_files/system/system.h"
 # 1 "C:/Program Files/Microchip/MPLABX/v6.05/packs/Microchip/PIC12-16F1xxx_DFP/1.3.90/xc8\\pic\\include\\xc.h" 1 3
@@ -6027,7 +6027,7 @@ void CLOCK_Initialize(void);
 # 42 "./mcc_generated_files/system/system.h" 2
 
 # 1 "./mcc_generated_files/system/../system/pins.h" 1
-# 381 "./mcc_generated_files/system/../system/pins.h"
+# 382 "./mcc_generated_files/system/../system/pins.h"
 void PIN_MANAGER_Initialize (void);
 
 
@@ -6037,6 +6037,20 @@ void PIN_MANAGER_Initialize (void);
 
 
 void PIN_MANAGER_IOC(void);
+
+
+
+
+
+
+
+void IO_RA0_ISR(void);
+# 408 "./mcc_generated_files/system/../system/pins.h"
+void IO_RA0_SetInterruptHandler(void (* InterruptHandler)(void));
+# 419 "./mcc_generated_files/system/../system/pins.h"
+extern void (*IO_RA0_InterruptHandler)(void);
+# 430 "./mcc_generated_files/system/../system/pins.h"
+void IO_RA0_DefaultInterruptHandler(void);
 # 43 "./mcc_generated_files/system/system.h" 2
 
 # 1 "./mcc_generated_files/system/../timer/tmr1.h" 1
@@ -6145,12 +6159,18 @@ void INT_DefaultInterruptHandler(void);
 # 45 "./mcc_generated_files/system/system.h" 2
 # 55 "./mcc_generated_files/system/system.h"
 void SYSTEM_Initialize(void);
-# 35 "main.c" 2
-# 61 "main.c"
-char toggle = 0;
+# 36 "main.c" 2
+# 58 "main.c"
+void Display(int a);
 
-struct digit
-{
+
+
+
+char toggle = 0;
+char counter = 0;
+char RA0Value = 1;
+
+struct digit {
     char a;
     char b;
     char c;
@@ -6165,8 +6185,7 @@ Digit one;
 Digit ten;
 Digit hundred;
 
-void ClearDigit(Digit* digit)
-{
+void ClearDigit(Digit* digit) {
     digit->a = 0;
     digit->b = 0;
     digit->c = 0;
@@ -6176,13 +6195,19 @@ void ClearDigit(Digit* digit)
     digit->g = 0;
 }
 
-void Tmr1CallBack(void)
-{
+void Tmr1CallBack(void) {
     toggle = 1 - toggle;
 
     PORTAbits.RA5 = toggle;
 
-    PORTAbits.RA4 = toggle;
+    PORTAbits.RA4 = toggle ^ !hundred.a &
+            hundred.b &
+            hundred.c &
+            !hundred.d &
+            !hundred.e &
+            !hundred.f &
+            !hundred.g;
+
 
     PORTCbits.RC5 = toggle ^ ten.a;
     PORTCbits.RC4 = toggle ^ ten.b;
@@ -6199,139 +6224,161 @@ void Tmr1CallBack(void)
     PORTCbits.RC0 = toggle ^ one.e;
     PORTAbits.RA2 = toggle ^ one.f;
     PORTAbits.RA1 = toggle ^ one.g;
-}
 
-void SetSegments(Digit* digit, int a)
-{
-    switch (a)
+    if (RA0Value)
     {
-        case 0:
-            digit->a = 1;
-            digit->b = 1;
-            digit->c = 1;
-            digit->d = 1;
-            digit->e = 1;
-            digit->f = 1;
-            digit->g = 0;
-            break;
-
-        case 1:
-            digit->a = 0;
-            digit->b = 1;
-            digit->c = 1;
-            digit->d = 0;
-            digit->e = 0;
-            digit->f = 0;
-            digit->g = 0;
-            break;
-
-        case 2:
-            digit->a = 1;
-            digit->b = 1;
-            digit->c = 0;
-            digit->d = 1;
-            digit->e = 1;
-            digit->f = 0;
-            digit->g = 1;
-            break;
-
-        case 3:
-            digit->a = 1;
-            digit->b = 1;
-            digit->c = 1;
-            digit->d = 1;
-            digit->e = 0;
-            digit->f = 0;
-            digit->g = 1;
-            break;
-
-        case 4:
-            digit->a = 0;
-            digit->b = 1;
-            digit->c = 1;
-            digit->d = 0;
-            digit->e = 0;
-            digit->f = 1;
-            digit->g = 1;
-            break;
-
-        case 5:
-            digit->a = 1;
-            digit->b = 0;
-            digit->c = 1;
-            digit->d = 1;
-            digit->e = 0;
-            digit->f = 1;
-            digit->g = 1;
-            break;
-
-        case 6:
-            digit->a = 1;
-            digit->b = 0;
-            digit->c = 1;
-            digit->d = 1;
-            digit->e = 1;
-            digit->f = 1;
-            digit->g = 1;
-            break;
-
-        case 7:
-            digit->a = 1;
-            digit->b = 1;
-            digit->c = 1;
-            digit->d = 0;
-            digit->e = 0;
-            digit->f = 0;
-            digit->g = 0;
-            break;
-
-        case 8:
-            digit->a = 1;
-            digit->b = 1;
-            digit->c = 1;
-            digit->d = 1;
-            digit->e = 1;
-            digit->f = 1;
-            digit->g = 1;
-            break;
-
-        case 9:
-            digit->a = 1;
-            digit->b = 1;
-            digit->c = 1;
-            digit->d = 1;
-            digit->e = 0;
-            digit->f = 1;
-            digit->g = 1;
-            break;
+        RA0Value = 0;
+        Display(++counter);
     }
 }
 
-void Display(int a)
-{
-    int ones = a % 10;
-    int tens = (a/10) % 10;
-    int hundreds = a > 99;
+void SetSegments(Digit* digit, int a, char blank) {
+    if (blank) {
+        digit->a = 0;
+        digit->b = 0;
+        digit->c = 0;
+        digit->d = 0;
+        digit->e = 0;
+        digit->f = 0;
+        digit->g = 0;
+    } else {
+        switch (a) {
+            case 0:
+                digit->a = 1;
+                digit->b = 1;
+                digit->c = 1;
+                digit->d = 1;
+                digit->e = 1;
+                digit->f = 1;
+                digit->g = 0;
+                break;
 
-    SetSegments(&one, ones);
-    SetSegments(&ten, tens);
-    SetSegments(&hundred, hundreds);
+            case 1:
+                digit->a = 0;
+                digit->b = 1;
+                digit->c = 1;
+                digit->d = 0;
+                digit->e = 0;
+                digit->f = 0;
+                digit->g = 0;
+                break;
+
+            case 2:
+                digit->a = 1;
+                digit->b = 1;
+                digit->c = 0;
+                digit->d = 1;
+                digit->e = 1;
+                digit->f = 0;
+                digit->g = 1;
+                break;
+
+            case 3:
+                digit->a = 1;
+                digit->b = 1;
+                digit->c = 1;
+                digit->d = 1;
+                digit->e = 0;
+                digit->f = 0;
+                digit->g = 1;
+                break;
+
+            case 4:
+                digit->a = 0;
+                digit->b = 1;
+                digit->c = 1;
+                digit->d = 0;
+                digit->e = 0;
+                digit->f = 1;
+                digit->g = 1;
+                break;
+
+            case 5:
+                digit->a = 1;
+                digit->b = 0;
+                digit->c = 1;
+                digit->d = 1;
+                digit->e = 0;
+                digit->f = 1;
+                digit->g = 1;
+                break;
+
+            case 6:
+                digit->a = 1;
+                digit->b = 0;
+                digit->c = 1;
+                digit->d = 1;
+                digit->e = 1;
+                digit->f = 1;
+                digit->g = 1;
+                break;
+
+            case 7:
+                digit->a = 1;
+                digit->b = 1;
+                digit->c = 1;
+                digit->d = 0;
+                digit->e = 0;
+                digit->f = 0;
+                digit->g = 0;
+                break;
+
+            case 8:
+                digit->a = 1;
+                digit->b = 1;
+                digit->c = 1;
+                digit->d = 1;
+                digit->e = 1;
+                digit->f = 1;
+                digit->g = 1;
+                break;
+
+            case 9:
+                digit->a = 1;
+                digit->b = 1;
+                digit->c = 1;
+                digit->d = 1;
+                digit->e = 0;
+                digit->f = 1;
+                digit->g = 1;
+                break;
+        }
+    }
 }
 
-int main(void)
+void Display(int a) {
+    int ones = a % 10;
+    int tens = (a / 10) % 10;
+    int hundreds = a > 99;
+
+    SetSegments(&one, ones, 0);
+    SetSegments(&ten, tens, (a < 10));
+    SetSegments(&hundred, hundreds, 0);
+}
+
+void RA0Callback(void)
 {
+    RA0Value = 1;
+}
+
+int main(void) {
     SYSTEM_Initialize();
 
     PORTAbits.RA5 = 1;
-# 256 "main.c"
+
     ClearDigit(&one);
     ClearDigit(&ten);
     ClearDigit(&hundred);
 
     one.b = 1;
     one.c = 1;
-# 274 "main.c"
+
+
+
+
+
     TMR1_OverflowCallbackRegister(Tmr1CallBack);
+    IO_RA0_SetInterruptHandler(RA0Callback);
 
 
     (INTCONbits.GIE = 1);
@@ -6341,20 +6388,11 @@ int main(void)
 
 
     (INTCONbits.PEIE = 1);
+# 301 "main.c"
+    Display(counter);
 
-
-
-
-    int i = 0;
-
-    while(1)
+    while (1)
     {
-        Display(i);
-
-        if (i > 199)
-        {
-            i = 0;
-        }
-        _delay((unsigned long)((500)*(16000000/4000.0)));
     }
+
 }

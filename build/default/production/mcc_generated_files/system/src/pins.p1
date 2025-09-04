@@ -668,11 +668,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;mcc_generated_files/system/src/pins.c: 59:     ANSELC = 0x0;
 [e = _ANSELC -> -> 0 `i `uc ]
 "64
-[; ;mcc_generated_files/system/src/pins.c: 64:     WPUA = 0x3F;
-[e = _WPUA -> -> 63 `i `uc ]
+[; ;mcc_generated_files/system/src/pins.c: 64:     WPUA = 0x9;
+[e = _WPUA -> -> 9 `i `uc ]
 "65
-[; ;mcc_generated_files/system/src/pins.c: 65:     WPUB = 0xF0;
-[e = _WPUB -> -> 240 `i `uc ]
+[; ;mcc_generated_files/system/src/pins.c: 65:     WPUB = 0x0;
+[e = _WPUB -> -> 0 `i `uc ]
 "66
 [; ;mcc_generated_files/system/src/pins.c: 66:     OPTION_REGbits.nWPUEN = 0x0;
 [e = . . _OPTION_REGbits 0 5 -> -> 0 `i `uc ]

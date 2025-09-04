@@ -6027,7 +6027,7 @@ void CLOCK_Initialize(void);
 # 42 "mcc_generated_files/system/src/../system.h" 2
 
 # 1 "mcc_generated_files/system/src/../../system/pins.h" 1
-# 381 "mcc_generated_files/system/src/../../system/pins.h"
+# 382 "mcc_generated_files/system/src/../../system/pins.h"
 void PIN_MANAGER_Initialize (void);
 
 
@@ -6037,6 +6037,20 @@ void PIN_MANAGER_Initialize (void);
 
 
 void PIN_MANAGER_IOC(void);
+
+
+
+
+
+
+
+void IO_RA0_ISR(void);
+# 408 "mcc_generated_files/system/src/../../system/pins.h"
+void IO_RA0_SetInterruptHandler(void (* InterruptHandler)(void));
+# 419 "mcc_generated_files/system/src/../../system/pins.h"
+extern void (*IO_RA0_InterruptHandler)(void);
+# 430 "mcc_generated_files/system/src/../../system/pins.h"
+void IO_RA0_DefaultInterruptHandler(void);
 # 43 "mcc_generated_files/system/src/../system.h" 2
 
 # 1 "mcc_generated_files/system/src/../../timer/tmr1.h" 1

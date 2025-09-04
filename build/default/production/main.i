@@ -7,7 +7,7 @@
 # 1 "C:/Program Files/Microchip/MPLABX/v6.05/packs/Microchip/PIC12-16F1xxx_DFP/1.3.90/xc8\\pic\\include\\language_support.h" 1 3
 # 2 "<built-in>" 2
 # 1 "main.c" 2
-# 35 "main.c"
+# 36 "main.c"
 # 1 "./mcc_generated_files/system/system.h" 1
 # 39 "./mcc_generated_files/system/system.h"
 # 1 "C:/Program Files/Microchip/MPLABX/v6.05/packs/Microchip/PIC12-16F1xxx_DFP/1.3.90/xc8\\pic\\include\\xc.h" 1 3
@@ -6145,9 +6145,16 @@ void INT_DefaultInterruptHandler(void);
 # 45 "./mcc_generated_files/system/system.h" 2
 # 55 "./mcc_generated_files/system/system.h"
 void SYSTEM_Initialize(void);
-# 35 "main.c" 2
-# 61 "main.c"
+# 36 "main.c" 2
+# 58 "main.c"
+void Display(int a);
+
+
+
+
 char toggle = 0;
+char counter = 0;
+char RA0Value = 1;
 
 struct digit {
     char a;
@@ -6203,6 +6210,12 @@ void Tmr1CallBack(void) {
     PORTCbits.RC0 = toggle ^ one.e;
     PORTAbits.RA2 = toggle ^ one.f;
     PORTAbits.RA1 = toggle ^ one.g;
+
+    if (RA0Value)
+    {
+        RA0Value = 0;
+        Display(++counter);
+    }
 }
 
 void SetSegments(Digit* digit, int a, char blank) {
@@ -6355,18 +6368,19 @@ int main(void) {
 
 
     (INTCONbits.PEIE = 1);
+# 295 "main.c"
+    Display(counter);
 
-
-
-
-    int i = 0;
-
-    while (1) {
-        Display(i++);
-
-        if (i > 199) {
-            i = 0;
+    while (1)
+    {
+        if (RA0)
+        {
+          RA0Value = 1;
+          while (RA0)
+          {
+              _delay((unsigned long)((30)*(16000000/4000.0)));
+          }
         }
-        _delay((unsigned long)((100)*(16000000/4000.0)));
     }
+
 }
