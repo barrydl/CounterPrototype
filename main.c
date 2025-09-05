@@ -265,22 +265,9 @@ void RA0Isr(void) {
 int main(void) {
     SYSTEM_Initialize();
 
-//    COMMON = 1;
-
-//    ClearDigit(&one);
-//    ClearDigit(&ten);
-//    ClearDigit(&hundred);
-
-//    one.b = 1;
-//    one.c = 1;
-    
     counter = 0;
     Display(counter);
     
-    // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts 
-    // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global and Peripheral Interrupts 
-    // Use the following macros to: 
-
     TMR1_OverflowCallbackRegister(Tmr1CallBack);
     IO_RA0_SetInterruptHandler(RA0Isr);
 
@@ -320,7 +307,6 @@ int main(void) {
             }
         }
 #else
-//        __delay_ms(5000);
         SLEEP();
         
         int timeout = 0;
