@@ -68,6 +68,7 @@
 #define IO_RA0_SetOpenDrain()       do { ODCONAbits. = 1; } while(0)
 #define IO_RA0_SetAnalogMode()      do { ANSELAbits.ANSA0 = 1; } while(0)
 #define IO_RA0_SetDigitalMode()     do { ANSELAbits.ANSA0 = 0; } while(0)
+#define RA0_SetInterruptHandler  IO_RA0_SetInterruptHandler
 // get/set IO_RA1 aliases
 #define IO_RA1_TRIS                 TRISAbits.TRISA1
 #define IO_RA1_LAT                  LATAbits.LATA1
@@ -387,6 +388,46 @@ void PIN_MANAGER_Initialize (void);
  * @return none
  */
 void PIN_MANAGER_IOC(void);
+
+/**
+ * @ingroup  pinsdriver
+ * @brief Interrupt on Change Handler for the IO_RA0 pin functionality
+ * @param none
+ * @return none
+ */
+void IO_RA0_ISR(void);
+
+/**
+ * @ingroup  pinsdriver
+ * @brief Interrupt Handler Setter for IO_RA0 pin interrupt-on-change functionality.
+ *        Allows selecting an interrupt handler for IO_RA0 at application runtime.
+ * @pre Pins intializer called
+ * @param InterruptHandler function pointer.
+ * @return none
+ */
+void IO_RA0_SetInterruptHandler(void (* InterruptHandler)(void));
+
+/**
+ * @ingroup  pinsdriver
+ * @brief Dynamic Interrupt Handler for IO_RA0 pin.
+ *        This is a dynamic interrupt handler to be used together with the IO_RA0_SetInterruptHandler() method.
+ *        This handler is called every time the IO_RA0 ISR is executed and allows any function to be registered at runtime.
+ * @pre Pins intializer called
+ * @param none
+ * @return none
+ */
+extern void (*IO_RA0_InterruptHandler)(void);
+
+/**
+ * @ingroup  pinsdriver
+ * @brief Default Interrupt Handler for IO_RA0 pin. 
+ *        This is a predefined interrupt handler to be used together with the IO_RA0_SetInterruptHandler() method.
+ *        This handler is called every time the IO_RA0 ISR is executed. 
+ * @pre Pins intializer called
+ * @param none
+ * @return none
+ */
+void IO_RA0_DefaultInterruptHandler(void);
 
 
 #endif // PINS_H

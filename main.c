@@ -1,4 +1,5 @@
 #define AUTO_COUNT 0
+#define POLLED 0
 /*
  * MAIN Generated Driver File
  * 
@@ -118,9 +119,8 @@ void Tmr1CallBack(void) {
     D2E = toggle ^ one.e;
     D2F = toggle ^ one.f;
     D2G = toggle ^ one.g;
-    
-    if (RA0Value)
-    {
+
+    if (RA0Value) {
         RA0Value = 0;
         Display(++counter);
     }
@@ -250,24 +250,40 @@ void Display(int a) {
     SetSegments(&hundred, hundreds, 0);
 }
 
+void RA0Isr(void) {
+    
+    counter += 1;
+    if (counter > 199)
+    {
+        counter = 0;
+    }
+    
+    Display(counter);
+    __delay_ms(300);
+}
+
 int main(void) {
     SYSTEM_Initialize();
 
-    COMMON = 1;
+//    COMMON = 1;
 
-    ClearDigit(&one);
-    ClearDigit(&ten);
-    ClearDigit(&hundred);
+//    ClearDigit(&one);
+//    ClearDigit(&ten);
+//    ClearDigit(&hundred);
 
-    one.b = 1;
-    one.c = 1;
-
+//    one.b = 1;
+//    one.c = 1;
+    
+    counter = 0;
+    Display(counter);
+    
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts 
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global and Peripheral Interrupts 
     // Use the following macros to: 
 
     TMR1_OverflowCallbackRegister(Tmr1CallBack);
-    
+    IO_RA0_SetInterruptHandler(RA0Isr);
+
     // Enable the Global Interrupts 
     INTERRUPT_GlobalInterruptEnable();
 
@@ -294,16 +310,35 @@ int main(void) {
 #else
     Display(counter);
 
-    while (1)
-    {
-        if (!RA0)
-        {
-          RA0Value = 1;
-          while (!RA0)
-          {              
-              __delay_ms(30);
-          }
+    while (1) {
+
+#if POLLED    
+        if (!RA0) {
+            RA0Value = 1;
+            while (!RA0) {
+                __delay_ms(30);
+            }
         }
+#else
+//        __delay_ms(5000);
+        SLEEP();
+        
+        int timeout = 0;
+
+#define RESET_TIMEOUT   2000
+        
+        while ((timeout++ < RESET_TIMEOUT) && !RA0)
+        {
+            __delay_ms(1);
+        }
+        
+        if (timeout > RESET_TIMEOUT)
+        {
+            counter = 0;
+            Display(counter);
+            __delay_ms(1000);
+        }        
+#endif    
     }
 #endif    
 }
